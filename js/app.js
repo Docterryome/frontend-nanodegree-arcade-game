@@ -1,5 +1,8 @@
 // Enemies our player must avoid
-var Enemy = function(x, y, speed) {
+var randomSpeed = function (){
+    return Math.floor((Math.random() * 250) + 75);
+}
+var Enemy = function(x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,7 +11,7 @@ var Enemy = function(x, y, speed) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
-    this.speed = speed;
+    this.speed = randomSpeed();
 };
 
 // Update the enemy's position, required method for game
@@ -17,7 +20,16 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    // If enemy has left the screen, reload it before the begining
+    // with a new spped to simulate a new enemy
+    if(this.x < 500){
     this.x += this.speed * dt;
+    }
+    else{
+        this.x = -100;
+        this.speed = randomSpeed();
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -29,20 +41,29 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    this.sprite = "images/char-boy.png";
+    this.chars = ["images/char-boy.png", "images/char-cat-girl.png", "images/char-horn-girl.png", "images/char-pink-girl.png", "images/char-princess-girl.png"];
+    this.sprite =  "images/char-boy.png"; // this.chars[this.playerIterator];
+    //Starts players at the bottom middle tile
     this.x = 200;
     this.y = 380;
+    this.playerIterator = 0;
 
 };
 
 Player.prototype.update = function() {
-    
+    if(this.y < 0){
+        this.playerIterator++;
+        this.sprite = "images/char-cat-girl.png"; //this.chars[this.playerIterator];
+        this.x = 200;
+        this.y = 380;
+    }
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//Players input
 Player.prototype.handleInput = function(input){
     if(input == 'left' && this.x > 0){
         this.x -= 101;
@@ -61,7 +82,10 @@ Player.prototype.handleInput = function(input){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [new Enemy(0, 36, 100), new Enemy(0, 122, 75), new Enemy(0, 208, 125)];
+var bug1 = new Enemy(0, 36);
+var bug2 = new Enemy(0, 122);
+var bug3 = new Enemy(0, 208);
+var allEnemies = [bug1, bug2, bug3];
 var player = new Player();
 
 
