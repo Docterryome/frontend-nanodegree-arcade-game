@@ -42,7 +42,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.chars = ["images/char-boy.png", "images/char-cat-girl.png", "images/char-horn-girl.png", "images/char-pink-girl.png", "images/char-princess-girl.png"];
-    this.sprite =  "images/char-boy.png"; // this.chars[this.playerIterator];
+    this.sprite = "images/char-cat-girl.png";
     //Starts players at the bottom middle tile
     this.x = 200;
     this.y = 380;
@@ -53,7 +53,7 @@ var Player = function() {
 Player.prototype.update = function() {
     if(this.y < 0){
         this.playerIterator++;
-        this.sprite = "images/char-cat-girl.png"; //this.chars[this.playerIterator];
+        this.sprite = "images/char-cat-girl.png";
         this.x = 200;
         this.y = 380;
     }
