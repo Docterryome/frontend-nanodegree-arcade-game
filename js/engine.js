@@ -107,6 +107,8 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
+         
+        clearCanvas();
         var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
@@ -156,6 +158,11 @@ var Engine = (function(global) {
 
         player.render();
 
+    }
+
+    /* This function will clear the board before it redraws the image */
+    function clearCanvas () {
+        ctx.clearRect(0,0,505,606);
     }
 
     /* This function does nothing but it could have been a good place to

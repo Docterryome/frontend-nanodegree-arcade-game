@@ -1,6 +1,9 @@
 
+
+var speedBase = 75;
+var speedVariation = 250;
 var randomSpeed = function (){
-    return Math.floor((Math.random() * 250) + 75);
+    return Math.floor((Math.random() * speedVariation) + speedBase);
 }
 
 // A sprite that just sits and does nothing.
@@ -64,36 +67,62 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    this.life = 3;
-    this.playerIterator = 0;
-    this.chars = ["images/char-boy.png", "images/char-cat-girl.png", "images/char-horn-girl.png", "images/char-pink-girl.png", "images/char-princess-girl.png"];
-    this.sprite = this.chars[this.playerIterator];
-    //Starts players at the bottom middle tile
-    this.x = 200;
-    this.y = 380;
-
+    this.init = function init(){
+        this.points = 0;
+        this.life = 3;
+        this.playerIterator = 0;
+        this.chars = ["images/char-boy.png", "images/char-cat-girl.png", "images/char-horn-girl.png", "images/char-pink-girl.png", "images/char-princess-girl.png"];
+        this.sprite = this.chars[this.playerIterator];
+        //Starts players at the bottom middle tile
+        this.x = 200;
+        this.y = 380;
+        this.isUpdated = false;
+        $("#lives").replaceWith('<h3 id="lives">Lives: ' + this.life + "</h3>");
+        $("#points").replaceWith('<h3 id="points">Points: ' + this.points + "</h3>");
+    }
 };
 
 Player.prototype.update = function() {
-    //Checks for collision of enemy
+    // Checks for collision of enemy
     for(enemy in allEnemies){
         if (Math.abs(this.x - allEnemies[enemy].x ) < 45 && Math.abs(this.y - allEnemies[enemy].y) < 15){
             this.x = 200;
             this.y = 380;
             this.life--;
+            $("#lives").replaceWith('<h3 id="lives">Lives: ' + this.life + "</h3>");
+
         }
     }
 
-    //Checks if player got to the other side
+    // Checks if player got to the other side
     if(this.y < 0){
+        this.points++;
         spriteArray.push(new PlainSprite(this.sprite, this.x, this.y));
         this.playerIterator++;
         this.sprite = this.chars[this.playerIterator % 5];
         this.x = 200;
         this.y = 380;
+        this.isUpdated = true;
+        $("#points").replaceWith('<h3 id="points">Points: ' + this.points + "</h3>");
     }
+    // This will update the speed of the bugs for each 
+    // time all the charactors reach the other side
+    // isUpdated is only used to make sure this if statement
+    // is only called once after all char reach the other side
+    // otherwise the bugs will go crazy fast really quick.
+    if(this.playerIterator % 5 == 0 && this.isUpdated){
+        this.points += this.playerIterator;
+        speedVariation += this.playerIterator;
+        speedBase += this.playerIterator;
+        spriteArray = [];
+        this.isUpdated = false;
+        $("#points").replaceWith('<h3 id="points">Points: ' + this.points + "</h3>");
+    }
+    // Checks the life of the player
     if(this.life < 0){
-        //Stop Game
+        // Stop Game
+        spriteArray = [];
+        this.init();
     }
 };
 
@@ -103,15 +132,17 @@ Player.prototype.render = function() {
 
 //Players input
 Player.prototype.handleInput = function(input){
-    check_sprite_collision = function(){
+    var isCollision = false;
+
         for(sprites in spriteArray){
-            if(Math.abs(this.y - spriteArray[sprites].y) < 60 && Math.abs(this.x - spriteArray[sprites].x) < 10){
-                return false;
+            var yPos  = this.y - spriteArray[sprites].y;
+            var xPos = this.x - spriteArray[sprites].x;
+            //console.log("Y: " + yPos +"\nX: " + xPos); 
+            if(Math.abs(this.y - spriteArray[sprites].y) < 95 && Math.abs(this.x - spriteArray[sprites].x) < 10){
+                //console.log("2chainz!");
+                isCollision = true;
             }
         }
-        return true;
-
-    }
     if(input == 'left' && this.x > 0){
         this.x -= 101;
     }
@@ -120,13 +151,13 @@ Player.prototype.handleInput = function(input){
     }
     // Do to update function player will never reach top
     // Check if player is below a sprite object
-    if(input == 'up' && check_sprite_collision()){
+    if(input == 'up' && !isCollision){
         this.y -= 86;
     }
     if(input == 'down' && this.y < 380) {
         this.y += 86;
     }
-    console.log("x: "+ this.x + ", y: " + this.y);
+    //console.log("x: "+ this.x + ", y: " + this.y);
 };
 
 // Now instantiate your objects.
@@ -137,6 +168,7 @@ var bug2 = new Enemy(0, 122);
 var bug3 = new Enemy(0, 208);
 var allEnemies = [bug1, bug2, bug3];
 var player = new Player();
+player.init();
 var spriteArray = [];
 
 
