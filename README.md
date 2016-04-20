@@ -9,7 +9,7 @@ For detailed instructions on how to get started, check out this [guide](https://
 How to Play
 ===========
 
-The goal of this game is to move all of the charactors across the board into the river, without colliding with any of the bugs.
+The goal of this game is to move all of the charactors across the board into the river without colliding with any of the bugs.
 
 
 ###movements:###
