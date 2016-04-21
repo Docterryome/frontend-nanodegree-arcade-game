@@ -40,7 +40,7 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 
     // If enemy has left the screen, reload it before the begining
-    // with a new spped to simulate a new enemy
+    // with a new speed to simulate a new enemy
     if(this.x < 500){
     this.x += this.speed * dt;
     }
@@ -123,6 +123,8 @@ Player.prototype.update = function() {
         // Stop Game
         spriteArray = [];
         this.init();
+        speedBase = 75;
+        speedVariation = 250;
     }
 };
 
@@ -135,9 +137,6 @@ Player.prototype.handleInput = function(input){
     var isCollision = false;
 
         for(sprites in spriteArray){
-            var yPos  = this.y - spriteArray[sprites].y;
-            var xPos = this.x - spriteArray[sprites].x;
-            //console.log("Y: " + yPos +"\nX: " + xPos); 
             if(Math.abs(this.y - spriteArray[sprites].y) < 95 && Math.abs(this.x - spriteArray[sprites].x) < 10){
                 //console.log("2chainz!");
                 isCollision = true;
